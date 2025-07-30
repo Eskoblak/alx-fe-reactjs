@@ -1,19 +1,16 @@
-import './App.css';
-import ProfilePage from './components/ProfilePage';
+// src/App.jsx
+import ProfilePage from './ProfilePage';
 import UserContext from './UserContext';
 
 function App() {
-  const userData = {
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-    lastLogin: new Date().toLocaleString()
+  const userData = { 
+    name: "Jane Doe", 
+    email: "jane.doe@example.com" 
   };
 
   return (
     <UserContext.Provider value={userData}>
-      <div className="app">
-        <ProfilePage />
-      </div>
+      <ProfilePage />
     </UserContext.Provider>
   );
 }

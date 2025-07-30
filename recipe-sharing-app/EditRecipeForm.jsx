@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRecipeStore } from '../store/recipeStore';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const AddRecipeForm = () => {
+const EditRecipeForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const getRecipe = useRecipeStore(state => state.getRecipe);
+  const updateRecipe = useRecipeStore(state => state.updateRecipe);
+  
   const [recipe, setRecipe] = useState({
     title: '',
     description: '',
@@ -10,8 +15,12 @@ const AddRecipeForm = () => {
     instructions: ''
   });
 
-  const addRecipe = useRecipeStore(state => state.addRecipe);
-  const navigate = useNavigate();
+  useEffect(() => {
+    const existingRecipe = getRecipe(Number(id));
+    if (existingRecipe) {
+      setRecipe(existingRecipe);
+    }
+  }, [id, getRecipe]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,13 +44,13 @@ const AddRecipeForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addRecipe(recipe);
-    navigate('/');
+    updateRecipe(Number(id), recipe);
+    navigate(`/recipe/${id}`);
   };
 
   return (
     <form onSubmit={handleSubmit} className="recipe-form">
-      <h2>Add New Recipe</h2>
+      <h2>Edit Recipe</h2>
       
       <div className="form-group">
         <label>Title:</label>
@@ -99,18 +108,9 @@ const AddRecipeForm = () => {
         />
       </div>
 
-      <div className="form-actions">
-        <button type="submit" className="submit-btn">Add Recipe</button>
-        <button 
-          type="button" 
-          onClick={() => navigate('/')} 
-          className="cancel-btn"
-        >
-          Cancel
-        </button>
-      </div>
+      <button type="submit" className="submit-btn">Update Recipe</button>
     </form>
   );
 };
 
-export default AddRecipeForm;
+export default EditRecipeForm;  // Changed to default export
