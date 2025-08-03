@@ -1,0 +1,40 @@
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.search-container {
+  margin: 20px 0;
+}
+
+input {
+  padding: 8px;
+  width: 200px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.user-card {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.user-card img {
+  width: 100px;
+  border-radius: 50%;
+}
