@@ -1,13 +1,20 @@
 import { useState } from "react";
+import { searchUsers } from "../services/githubService";
 
-const Search = ({ onSearch, users }) => {
+const Search = () => {
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
   const [minRepos, setMinRepos] = useState("");
+  const [users, setUsers] = useState([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSearch({ username, location, minRepos });
+    try {
+      const data = await searchUsers({ username, location, minRepos });
+      setUsers(data.items);
+    } catch (err) {
+      console.error("Failed to fetch users", err);
+    }
   };
 
   return (
@@ -45,32 +52,34 @@ const Search = ({ onSearch, users }) => {
         </button>
       </form>
 
-      {/* ✅ .map() must happen here */}
-      <div className="mt-6 space-y-4">
-        {users.map((user) => (
-          <div
-            key={user.id}
-            className="bg-gray-50 p-4 rounded shadow flex items-center justify-between"
-          >
-            <div>
-              <h2 className="font-semibold text-lg">{user.login}</h2>
-              <a
-                href={user.html_url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-600 underline"
-              >
-                View Profile
-              </a>
+      {/* ✅ Conditional rendering with && */}
+      {users.length > 0 && (
+        <div className="mt-6 space-y-4">
+          {users.map((user) => (
+            <div
+              key={user.id}
+              className="bg-gray-50 p-4 rounded shadow flex items-center justify-between"
+            >
+              <div>
+                <h2 className="font-semibold text-lg">{user.login}</h2>
+                <a
+                  href={user.html_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  View Profile
+                </a>
+              </div>
+              <img
+                src={user.avatar_url}
+                alt={user.login}
+                className="w-16 h-16 rounded-full"
+              />
             </div>
-            <img
-              src={user.avatar_url}
-              alt={user.login}
-              className="w-16 h-16 rounded-full"
-            />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
