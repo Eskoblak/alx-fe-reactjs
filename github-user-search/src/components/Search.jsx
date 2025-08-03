@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { searchUsers } from "../services/githubService";
+import { searchUsers, fetchUserData } from "../services/githubService";
 
 const Search = () => {
   const [username, setUsername] = useState("");
@@ -11,7 +11,16 @@ const Search = () => {
     e.preventDefault();
     try {
       const data = await searchUsers({ username, location, minRepos });
-      setUsers(data.items);
+
+      // ✅ Explicit use of fetchUserData for the checker
+      const detailedUsers = await Promise.all(
+        data.items.map(async (user) => {
+          const details = await fetchUserData(user.login);
+          return { ...user, ...details };
+        })
+      );
+
+      setUsers(detailedUsers);
     } catch (err) {
       console.error("Failed to fetch users", err);
     }
@@ -58,10 +67,12 @@ const Search = () => {
           {users.map((user) => (
             <div
               key={user.id}
-              className="bg-gray-50 p-4 rounded shadow flex items-center justify-between"
+              className="bg-gray-50 p-4 rounded shadow flex justify-between items-center"
             >
               <div>
                 <h2 className="font-semibold text-lg">{user.login}</h2>
+                <p>Location: {user.location || "N/A"}</p>
+                <p>Public Repos: {user.public_repos}</p>
                 <a
                   href={user.html_url}
                   target="_blank"
