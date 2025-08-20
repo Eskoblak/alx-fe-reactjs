@@ -1,59 +1,44 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-function RecipeList() {
-  const [recipes, setRecipes] = useState([]);
+export default function RecipeDetails() {
+  const { id } = useParams();
+  const [recipe, setRecipe] = useState(null);
 
   useEffect(() => {
-    fetch("/src/data.json")
-      .then((res) => res.json())
-      .then((data) => setRecipes(data))
-      .catch((err) => console.error("Error loading recipes:", err));
-  }, []);
+    // For now, just load from localStorage (or mock data)
+    const savedRecipes = JSON.parse(localStorage.getItem("recipes")) || [];
+    const foundRecipe = savedRecipes.find((r) => r.id === parseInt(id));
+    setRecipe(foundRecipe);
+  }, [id]);
+
+  if (!recipe) {
+    return <p className="text-center mt-6">Recipe not found.</p>;
+  }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6 text-center">
-        Recipe Sharing Platform
-      </h1>
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-xl mt-6">
+      <h2 className="text-3xl font-bold mb-4 text-gray-800">{recipe.title}</h2>
+      {recipe.image && (
+        <img
+          src={recipe.image}
+          alt={recipe.title}
+          className="w-full h-64 object-cover rounded-lg mb-4"
+        />
+      )}
+      <p className="text-gray-700 mb-4">{recipe.description}</p>
 
-      {/* Add new recipe button */}
-      <div className="text-center mb-8">
-        <Link
-          to="/add"
-          className="inline-block px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-        >
-          ➕ Add a New Recipe
-        </Link>
+      {/* Ingredients */}
+      <div className="mb-4">
+        <h3 className="text-xl font-semibold mb-2">Ingredients</h3>
+        <p className="text-gray-600 whitespace-pre-line">{recipe.ingredients}</p>
       </div>
 
-      {/* Recipe cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {recipes.map((recipe) => (
-          <div
-            key={recipe.id}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
-          >
-            <img
-              src={recipe.image}
-              alt={recipe.title}
-              className="w-full h-40 object-cover"
-            />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold">{recipe.title}</h2>
-              <p className="text-gray-600 text-sm mt-2">{recipe.summary}</p>
-              <Link
-                to={`/recipes/${recipe.id}`}
-                className="mt-4 inline-block text-blue-500 hover:underline"
-              >
-                View Recipe →
-              </Link>
-            </div>
-          </div>
-        ))}
+      {/* Steps */}
+      <div>
+        <h3 className="text-xl font-semibold mb-2">Steps</h3>
+        <p className="text-gray-600 whitespace-pre-line">{recipe.steps}</p>
       </div>
     </div>
   );
 }
-
-export default RecipeList;
