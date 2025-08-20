@@ -1,65 +1,59 @@
-import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-function RecipeDetail() {
-  const { id } = useParams(); // get recipe id from URL
-  const [recipe, setRecipe] = useState(null);
+function RecipeList() {
+  const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
     fetch("/src/data.json")
       .then((res) => res.json())
-      .then((data) => {
-        const found = data.find((item) => item.id === parseInt(id));
-        setRecipe(found);
-      })
-      .catch((err) => console.error("Error loading recipe:", err));
-  }, [id]);
-
-  if (!recipe) {
-    return <p className="p-6 text-center">Loading recipe...</p>;
-  }
+      .then((data) => setRecipes(data))
+      .catch((err) => console.error("Error loading recipes:", err));
+  }, []);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <img
-        src={recipe.image}
-        alt={recipe.title}
-        className="w-full h-64 object-cover rounded-xl shadow-md"
-      />
-      <h1 className="text-3xl font-bold mt-6">{recipe.title}</h1>
-      <p className="text-gray-600 mt-2">{recipe.summary}</p>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-4xl font-bold mb-6 text-center">
+        Recipe Sharing Platform
+      </h1>
 
-      {/* Ingredients */}
-      <div className="mt-6 p-4 bg-white rounded-xl shadow">
-        <h2 className="text-2xl font-semibold mb-3">Ingredients</h2>
-        <ul className="list-disc list-inside text-gray-700 space-y-1">
-          {recipe.ingredients?.map((ingredient, index) => (
-            <li key={index}>{ingredient}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Instructions */}
-      <div className="mt-6 p-4 bg-white rounded-xl shadow">
-        <h2 className="text-2xl font-semibold mb-3">Instructions</h2>
-        <ol className="list-decimal list-inside text-gray-700 space-y-2">
-          {recipe.instructions?.map((step, index) => (
-            <li key={index}>{step}</li>
-          ))}
-        </ol>
-      </div>
-
-      {/* Back button */}
-      <div className="mt-6">
+      {/* Add new recipe button */}
+      <div className="text-center mb-8">
         <Link
-          to="/"
-          className="inline-block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+          to="/add"
+          className="inline-block px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
         >
-          ← Back to Home
+          ➕ Add a New Recipe
         </Link>
+      </div>
+
+      {/* Recipe cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {recipes.map((recipe) => (
+          <div
+            key={recipe.id}
+            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition"
+          >
+            <img
+              src={recipe.image}
+              alt={recipe.title}
+              className="w-full h-40 object-cover"
+            />
+            <div className="p-4">
+              <h2 className="text-xl font-semibold">{recipe.title}</h2>
+              <p className="text-gray-600 text-sm mt-2">{recipe.summary}</p>
+              <Link
+                to={`/recipes/${recipe.id}`}
+                className="mt-4 inline-block text-blue-500 hover:underline"
+              >
+                View Recipe →
+              </Link>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-export default RecipeDetail;
+export default RecipeList;
