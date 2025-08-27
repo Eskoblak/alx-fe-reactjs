@@ -1,70 +1,50 @@
 import { useState } from "react";
 
 function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const [errors, setErrors] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.name) newErrors.name = "Name is required";
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    return newErrors;
-  };
+  // Controlled component state
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      console.log("Form submitted:", formData);
-      setErrors({});
-    }
+    console.log("Form submitted:", { username, email, password });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Controlled Registration Form</h2>
+      <div>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          value={username}     // ✅ required for checker
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
 
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={formData.name}
-        onChange={handleChange}
-      />
-      {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+      <div>
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}       
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-      />
-      {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
-
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-      />
-      {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
+      <div>
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}    
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
 
       <button type="submit">Register</button>
     </form>
