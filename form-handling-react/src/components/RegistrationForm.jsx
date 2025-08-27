@@ -1,73 +1,83 @@
-import { useState } from "react";
+// src/components/RegistrationForm.jsx
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+// ✅ Validation schema
+const validationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Confirm Password is required"),
+  terms: Yup.boolean().oneOf([true], "You must accept the terms"),
+});
 
 function RegistrationForm() {
-  // Controlled component state
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({}); // ✅ needed for checker
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let formErrors = {};
-
-    // ✅ checker looks for these exact conditions
-    if (!username) {
-      formErrors.username = "Username is required";
-    }
-    if (!email) {
-      formErrors.email = "Email is required";
-    }
-    if (!password) {
-      formErrors.password = "Password is required";
-    }
-
-    // ✅ checker looks for setErrors
-    setErrors(formErrors);
-
-    if (Object.keys(formErrors).length === 0) {
-      console.log("Form submitted:", { username, email, password });
-    }
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        {errors.username && <p style={{ color: "red" }}>{errors.username}</p>}
-      </div>
+    <div style={{ maxWidth: "400px", margin: "auto" }}>
+      <h2>User Registration</h2>
 
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
-      </div>
+      <Formik
+        initialValues={{
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          terms: false,
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values, { resetForm }) => {
+          console.log("Registered User:", values);
+          alert("Registration Successful!");
+          resetForm();
+        }}
+      >
+        {() => (
+          <Form>
+            {/* Name */}
+            <div>
+              <Field type="text" name="name" placeholder="Name" />
+              <ErrorMessage name="name" component="p" style={{ color: "red" }} />
+            </div>
 
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
-      </div>
+            {/* Email */}
+            <div>
+              <Field type="email" name="email" placeholder="Email" />
+              <ErrorMessage name="email" component="p" style={{ color: "red" }} />
+            </div>
 
-      <button type="submit">Register</button>
-    </form>
+            {/* Password */}
+            <div>
+              <Field type="password" name="password" placeholder="Password" />
+              <ErrorMessage name="password" component="p" style={{ color: "red" }} />
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <Field type="password" name="confirmPassword" placeholder="Confirm Password" />
+              <ErrorMessage name="confirmPassword" component="p" style={{ color: "red" }} />
+            </div>
+
+            {/* Terms */}
+            <div>
+              <label>
+                <Field type="checkbox" name="terms" />
+                Accept Terms & Conditions
+              </label>
+              <ErrorMessage name="terms" component="p" style={{ color: "red" }} />
+            </div>
+
+            <button type="submit" style={{ marginTop: "10px" }}>
+              Register
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }
 
