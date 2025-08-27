@@ -1,21 +1,17 @@
-import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-});
+function FormikForm() {
+  const initialValues = { name: "", email: "", password: "" };
 
-const initialValues = {
-  name: "",
-  email: "",
-};
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string().required("Password is required"),
+  });
 
-const FormikForm = () => {
   const handleSubmit = (values) => {
-    console.log("Form Data", values);
-    alert(`Form submitted! \nName: ${values.name} \nEmail: ${values.email}`);
+    console.log("Formik form submitted:", values);
   };
 
   return (
@@ -25,22 +21,21 @@ const FormikForm = () => {
       onSubmit={handleSubmit}
     >
       <Form>
-        <div>
-          <label>Name:</label>
-          <Field type="text" name="name" />
-          <ErrorMessage name="name" component="div" style={{ color: "red" }} />
-        </div>
+        <h2>Formik Registration Form</h2>
 
-        <div>
-          <label>Email:</label>
-          <Field type="email" name="email" />
-          <ErrorMessage name="email" component="div" style={{ color: "red" }} />
-        </div>
+        <Field type="text" name="name" placeholder="Name" />
+        <ErrorMessage name="name" component="p" style={{ color: "red" }} />
 
-        <button type="submit">Submit</button>
+        <Field type="email" name="email" placeholder="Email" />
+        <ErrorMessage name="email" component="p" style={{ color: "red" }} />
+
+        <Field type="password" name="password" placeholder="Password" />
+        <ErrorMessage name="password" component="p" style={{ color: "red" }} />
+
+        <button type="submit">Register</button>
       </Form>
     </Formik>
   );
-};
+}
 
 export default FormikForm;
