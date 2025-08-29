@@ -1,24 +1,17 @@
+// src/_tests_/TodoList.test.js
 import { render, screen, fireEvent } from "@testing-library/react";
 import TodoList from "../components/TodoList";
 
-describe("TodoList Component", () => {
-  test("renders todos", () => {
-    render(<TodoList todos={["Learn React", "Build a Todo App"]} />);
-    expect(screen.getByText("Learn React")).toBeInTheDocument();
-    expect(screen.getByText("Build a Todo App")).toBeInTheDocument();
-  });
+test("renders todo items", () => {
+  render(<TodoList />);
+  expect(screen.getByText("Build a Todo App")).toBeInTheDocument();
+  expect(screen.getByText("Write Tests")).toBeInTheDocument();
+});
 
-  test("can delete a todo", () => {
-    const todos = ["Build a Todo App"];
-    render(<TodoList todos={todos} />);
-
-    // get the delete button by role (button) and name (text content)
-    const deleteButton = screen.getByRole("button", { name: /delete/i });
-
-    // click the delete button
-    fireEvent.click(deleteButton);
-
-    // expect todo to be removed
-    expect(screen.queryByText("Build a Todo App")).not.toBeInTheDocument();
-  });
+test("can delete a todo", () => {
+  render(<TodoList />);
+  const todo = screen.getByText("Build a Todo App");
+  const deleteButton = todo.nextSibling; // button is next to span
+  fireEvent.click(deleteButton);
+  expect(todo).not.toBeInTheDocument();
 });
