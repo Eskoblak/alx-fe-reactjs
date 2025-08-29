@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import AddTodoForm from './AddTodoForm';
 
-const TodoList = () => {
-  // Static array of todo items as required
+function TodoList() {
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', completed: false },
     { id: 2, text: 'Build a Todo App', completed: false },
@@ -62,6 +61,6 @@ const TodoList = () => {
       </ul>
     </div>
   );
-};
+}
 
 export default TodoList;

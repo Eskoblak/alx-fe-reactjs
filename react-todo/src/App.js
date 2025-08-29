@@ -1,6 +1,5 @@
-
 import React from 'react';
-import TodoList from './TodoList';  
+import TodoList from './TodoList';  // This will automatically resolve .jsx
 import './App.css';
 
 function App() {
