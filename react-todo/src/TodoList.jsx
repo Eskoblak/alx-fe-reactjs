@@ -37,31 +37,31 @@ const TodoList = () => {
     <div>
       <h1>Todo List</h1>
       <AddTodoForm onAdd={addTodo} />
-      <button 
-        onClick={clearAllTodos} 
+      <button
+        onClick={clearAllTodos}
         style={{ marginBottom: '10px', background: 'red', color: 'white' }}
       >
         Clear All
       </button>
       <ul data-testid="todo-list">
-        {todos.map((todo) => (
+        {todos.map((todo, index) => (
           <li
             key={todo.id}
             style={{
               textDecoration: todo.completed ? 'line-through' : 'none',
               cursor: 'pointer',
             }}
-            data-testid={`todo-item-${todo.id}`}
+            data-testid={`todo-item-${index}`}
           >
-            <span 
+            <span
               onClick={() => toggleTodo(todo.id)}
-              data-testid={`todo-text-${todo.id}`}
+              data-testid={`todo-text-${index}`}
             >
               {todo.text}
             </span>
-            <button 
+            <button
               onClick={() => deleteTodo(todo.id)}
-              data-testid={`delete-button-${todo.id}`}
+              data-testid={`delete-button-${index}`}
               style={{ marginLeft: '10px' }}
             >
               Delete
