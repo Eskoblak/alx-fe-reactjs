@@ -29,10 +29,20 @@ const TodoList = () => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const clearAllTodos = () => {
+    setTodos([]);
+  };
+
   return (
     <div>
       <h1>Todo List</h1>
       <AddTodoForm onAdd={addTodo} />
+      <button 
+        onClick={clearAllTodos} 
+        style={{ marginBottom: '10px', background: 'red', color: 'white' }}
+      >
+        Clear All
+      </button>
       <ul data-testid="todo-list">
         {todos.map((todo) => (
           <li
