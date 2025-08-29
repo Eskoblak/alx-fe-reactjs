@@ -8,7 +8,7 @@ const TodoList = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
 
-  const addTodo = (e) => {
+  const handleAddTodo = (e) => {
     e.preventDefault();
     if (inputValue.trim()) {
       const newTodo = {
@@ -21,7 +21,7 @@ const TodoList = () => {
     }
   };
 
-  const toggleTodo = (id) => {
+  const handleToggleTodo = (id) => {
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -29,14 +29,14 @@ const TodoList = () => {
     );
   };
 
-  const deleteTodo = (id) => {
+  const handleDeleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (
     <div>
       <h1>Todo List</h1>
-      <form onSubmit={addTodo} data-testid="add-todo-form">
+      <form onSubmit={handleAddTodo} data-testid="add-todo-form">
         <input
           type="text"
           value={inputValue}
@@ -59,13 +59,13 @@ const TodoList = () => {
             data-testid={`todo-item-${todo.id}`}
           >
             <span 
-              onClick={() => toggleTodo(todo.id)} 
+              onClick={() => handleToggleTodo(todo.id)}
               data-testid={`todo-text-${todo.id}`}
             >
               {todo.text}
             </span>
             <button 
-              onClick={() => deleteTodo(todo.id)} 
+              onClick={() => handleDeleteTodo(todo.id)}
               data-testid={`delete-button-${todo.id}`}
               style={{ marginLeft: '10px' }}
             >
