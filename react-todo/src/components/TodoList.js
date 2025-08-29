@@ -1,27 +1,24 @@
 import React, { useState } from 'react';
+import AddTodoForm from './AddTodoForm';
 
 const TodoList = () => {
+  // Static array of todo items as required
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', completed: false },
     { id: 2, text: 'Build a Todo App', completed: false },
     { id: 3, text: 'Write Tests', completed: true },
   ]);
-  const [inputValue, setInputValue] = useState('');
 
-  const handleAddTodo = (e) => {
-    e.preventDefault();
-    if (inputValue.trim()) {
-      const newTodo = {
-        id: Date.now(),
-        text: inputValue,
-        completed: false,
-      };
-      setTodos([...todos, newTodo]);
-      setInputValue('');
-    }
+  const addTodo = (text) => {
+    const newTodo = {
+      id: Date.now(),
+      text,
+      completed: false,
+    };
+    setTodos([...todos, newTodo]);
   };
 
-  const handleToggleTodo = (id) => {
+  const toggleTodo = (id) => {
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -29,25 +26,14 @@ const TodoList = () => {
     );
   };
 
-  const handleDeleteTodo = (id) => {
+  const deleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (
     <div>
       <h1>Todo List</h1>
-      <form onSubmit={handleAddTodo} data-testid="add-todo-form">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Add a new todo..."
-          data-testid="todo-input"
-        />
-        <button type="submit" data-testid="add-button">
-          Add Todo
-        </button>
-      </form>
+      <AddTodoForm onAdd={addTodo} />
       <ul data-testid="todo-list">
         {todos.map((todo) => (
           <li
@@ -59,13 +45,13 @@ const TodoList = () => {
             data-testid={`todo-item-${todo.id}`}
           >
             <span 
-              onClick={() => handleToggleTodo(todo.id)}
+              onClick={() => toggleTodo(todo.id)}
               data-testid={`todo-text-${todo.id}`}
             >
               {todo.text}
             </span>
             <button 
-              onClick={() => handleDeleteTodo(todo.id)}
+              onClick={() => deleteTodo(todo.id)}
               data-testid={`delete-button-${todo.id}`}
               style={{ marginLeft: '10px' }}
             >
