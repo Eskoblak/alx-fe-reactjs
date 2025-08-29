@@ -1,4 +1,3 @@
-// src/components/TodoList.jsx
 import React, { useState } from "react";
 
 function TodoList() {
@@ -8,7 +7,7 @@ function TodoList() {
   ]);
 
   const handleDelete = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
   return (
