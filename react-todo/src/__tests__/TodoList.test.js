@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TodoList from '../components/TodoList';
+import TodoList from '../TodoList';
 
 describe('TodoList Component', () => {
   test('renders initial todos from static array', () => {
@@ -65,5 +65,33 @@ describe('TodoList Component', () => {
     fireEvent.click(addButton);
     
     expect(screen.getByTestId('todo-list').children).toHaveLength(initialCount);
+  });
+
+  test('input field is cleared after adding a todo', () => {
+    render(<TodoList />);
+    
+    const input = screen.getByTestId('todo-input');
+    const addButton = screen.getByTestId('add-button');
+    
+    fireEvent.change(input, { target: { value: 'Test Todo' } });
+    expect(input.value).toBe('Test Todo');
+    
+    fireEvent.click(addButton);
+    expect(input.value).toBe('');
+  });
+
+  test('completed todo has line-through style', () => {
+    render(<TodoList />);
+    
+    // The third todo should already be completed from initial state
+    const completedTodo = screen.getByText('Write Tests');
+    expect(completedTodo).toHaveStyle('text-decoration: line-through');
+  });
+
+  test('non-completed todo does not have line-through style', () => {
+    render(<TodoList />);
+    
+    const nonCompletedTodo = screen.getByText('Learn React');
+    expect(nonCompletedTodo).not.toHaveStyle('text-decoration: line-through');
   });
 });
